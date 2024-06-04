@@ -14,6 +14,7 @@ export const theme = extendTheme({
     },
   },
   fonts: {
+    html:'Inter, sans-serif',
     body: 'Inter, sans-serif',
   },
 })

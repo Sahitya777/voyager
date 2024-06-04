@@ -1,9 +1,9 @@
 import EventsTable from "@/components/EventsTable";
 import { useDrawContext } from "@/context/DrawerContext";
 import { formatTimestamp, timeElapsed } from "@/lib/utils";
-import { Box, Spinner, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
+import { Box, Spinner, Tab, TabList, Tabs, Text,Tooltip } from "@chakra-ui/react";
 import axios from "axios";
-import { Check, Copy, Loader, LoaderCircle } from "lucide-react";
+import { Check, Copy, InfoIcon, Loader, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -18,7 +18,7 @@ const Home = () => {
     selectedTransactionDetails,
   } = useDrawContext();
   const [actionSelected, setactionSelected] = useState("overview");
-  console.log(selectedTransactionDetails, "se");
+  const [ethPrice, setethPrice] = useState<Number>();
 
   const bgColorType: any = {
     DEPLOY: "rgb(34, 54, 85)",
@@ -52,6 +52,18 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const fetchEthPrice = async () => {
+      const res = await axios.get("/api/ethPrice");
+      setethPrice(res?.data?.Ethprice?.ethereum?.usd);
+    };
+    try{
+        fetchEthPrice();
+    }catch(err){
+        console.log(err,"err in eth price")
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchTransactionData = async () => {
       const res = await axios.get(
         `/api/transactionData?txhash=${router.query.id}`
@@ -64,13 +76,14 @@ const Home = () => {
       fetchTransactionData();
     }
   }, [router.query.id]);
-  console.log(transactionData, "data");
+
+
 
   return (
     <Box display="flex" mt="2.5rem" justifyContent="center">
       <Box
         bg="#1b1b1b"
-        width="70%"
+        width="80%"
         borderRadius="6px"
         padding="32px"
         display="flex"
@@ -166,12 +179,12 @@ const Home = () => {
             </Text>
             <Box display="flex" gap="0.5rem">
               <Text color="white" fontSize="16px" lineHeight="32px">
-                {formatTimestamp(timestampBlockwise.timeStamp).substring(0, 11)}
+                {formatTimestamp(timestampBlockwise?.timeStamp).substring(0, 11)}
               </Text>
               <Text color="white" fontSize="12px" lineHeight="32px">
-                {formatTimestamp(timestampBlockwise.timeStamp).substring(
-                  formatTimestamp(timestampBlockwise.timeStamp).length - 9,
-                  formatTimestamp(timestampBlockwise.timeStamp).length
+                {formatTimestamp(timestampBlockwise?.timeStamp).substring(
+                  formatTimestamp(timestampBlockwise?.timeStamp).length - 9,
+                  formatTimestamp(timestampBlockwise?.timeStamp).length
                 )}
               </Text>
             </Box>
@@ -330,8 +343,30 @@ const Home = () => {
                 </Text>
                 <Box mt="1rem">
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">BLOCK NUMBER:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                            <Tooltip
+                            hasArrow
+                            label={
+                                'Unique number of the block in which the transaction is processed'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">BLOCK NUMBER:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -353,8 +388,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">TIMESTAMP:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Time at which the transaction was processed'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">TIMESTAMP:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -377,8 +434,233 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">ACTUAL FEE:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Actual fee paid for executing the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">ACTUAL FEE:</Text>
+                    </Box>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      height="38px"
+                      borderBottom="1px solid rgb(56, 56, 56)"
+                      width="100%"
+                      gap="0.4rem"
+                    >
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="white"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                      >
+                        {Number(transactionData?.actual_fee.amount) /
+                          Number(1000000000000000000)}
+                      </Text>
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="#8BA3DF"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                        onClick={() => {
+                          router.push(
+                            "https://voyager.online/token/0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+                          );
+                        }}
+                      >
+                        ETH
+                      </Text>
+                      <Copy
+                        height="16px"
+                        width="16px"
+                        color={"#7E7E7E"}
+                        //   style={{ marginTop: "8" }}
+                        onClick={() => {
+                          handleCopy(
+                            "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+                          );
+                        }}
+                      />
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="white"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                      >
+                        {!ethPrice
+                          ? "..."
+                          : `($${(
+                              Number(ethPrice) *
+                              (Number(transactionData?.actual_fee.amount) /
+                                Number(1000000000000000000))
+                            ).toFixed(6)})`}
+                      </Text>
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="white"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                      >
+                        to:
+                      </Text>
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="#8BA3DF"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                        onClick={() => {
+                          router.push(
+                            "https://voyager.online/contract/0x01176a1bd84444c89232ec27754698e5d2e7e1a7f1539f12027f28b23ec9f3d8"
+                          );
+                        }}
+                      >
+                        StarkWare: Sequencer
+                      </Text>
+                    </Box>
+                  </Box>
+                  <Box display="flex" gap="4rem">
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Max fee set when submitting the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">MAX FEE:</Text>
+                    </Box>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      gap="0.4rem"
+                      height="38px"
+                      borderBottom="1px solid rgb(56, 56, 56)"
+                      width="100%"
+                    >
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="white"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                      >
+                        {Number(selectedTransactionDetails?.max_fee) /
+                          Number(1000000000000000000)}
+                      </Text>
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="#8BA3DF"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                        onClick={() => {
+                          router.push(
+                            "https://voyager.online/token/0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+                          );
+                        }}
+                      >
+                        ETH
+                      </Text>
+                      <Copy
+                        height="16px"
+                        width="16px"
+                        color={"#7E7E7E"}
+                        //   style={{ marginTop: "8" }}
+                        onClick={() => {
+                          handleCopy(
+                            "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+                          );
+                        }}
+                      />
+                      <Text
+                        marginBottom="3px"
+                        fontSize="14px"
+                        fontWeight="400"
+                        color="white"
+                        cursor="pointer"
+                        _hover={{ color: "" }}
+                      >
+                        {!ethPrice
+                          ? "..."
+                          : `($${(
+                              Number(ethPrice) *
+                              (Number(selectedTransactionDetails?.max_fee) /
+                                Number(1000000000000000000))
+                            ).toFixed(6)})`}
+                      </Text>
+                    </Box>
+                  </Box>
+                  <Box display="flex" gap="4rem">
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Gas consumed for the transaction execution'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">GAS CONSUMED:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -395,59 +677,39 @@ const Home = () => {
                         cursor="pointer"
                         _hover={{ color: "" }}
                       >
-                        {timestampBlockwise?.blockNumber}
+                        {!ethPrice
+                          ? "..."
+                          : Number(transactionData?.actual_fee.amount) /
+                            Number(1000000000000000000) /
+                            Number(ethPrice)}
                       </Text>
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">MAX FEE:</Text>
-                    </Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      height="38px"
-                      borderBottom="1px solid rgb(56, 56, 56)"
-                      width="100%"
-                    >
-                      <Text
-                        marginBottom="3px"
-                        fontSize="14px"
-                        fontWeight="400"
-                        color="#8BA3DF"
-                        cursor="pointer"
-                        _hover={{ color: "" }}
-                      >
-                        {timestampBlockwise?.blockNumber}
-                      </Text>
-                    </Box>
-                  </Box>
-                  <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">GAS CONSUMED:</Text>
-                    </Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      height="38px"
-                      borderBottom="1px solid rgb(56, 56, 56)"
-                      width="100%"
-                    >
-                      <Text
-                        marginBottom="3px"
-                        fontSize="14px"
-                        fontWeight="400"
-                        color="#8BA3DF"
-                        cursor="pointer"
-                        _hover={{ color: "" }}
-                      >
-                        {timestampBlockwise?.blockNumber}
-                      </Text>
-                    </Box>
-                  </Box>
-                  <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">SENDER ADDRESS:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Sending party of the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">SENDER ADDRESS:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -488,8 +750,30 @@ const Home = () => {
                 </Text>
                 <Box mt="1rem">
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">UNIX TIMESTAMP:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Unix timestamp at which the transaction was processed'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">UNIX TIMESTAMP:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -521,8 +805,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">NONCE:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Nonce of the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">NONCE:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -544,8 +850,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">POSITION:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Index of the transaction within the block'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">POSITION:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -567,8 +895,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">VERSION:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Version of the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">VERSION:</Text>
                     </Box>
                     <Box
                       display="flex"
@@ -590,8 +940,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">EXECUTION RESOURCES:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Resource utilized to execute the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">EXECUTION RESOURCES:</Text>
                     </Box>
                     <Box borderBottom="1px solid rgb(56, 56, 56)" width="100%">
                       <Box
@@ -667,8 +1039,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">CALLDATA:</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Calldata that was sent in the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">CALLDATA:</Text>
                     </Box>
                     <Box
                       gap="0.4rem"
@@ -738,8 +1132,30 @@ const Home = () => {
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
-                    <Box display="flex" width="20%">
-                      <Text color="white">SIGNATURE(S):</Text>
+                    <Box display="flex" width="20%" gap="0.4rem">
+                    <Tooltip
+                            hasArrow
+                            label={
+                                'Signature(s) of the transaction'
+                            }
+                            placement="top"
+                            // ml="8rem"
+                            rounded="md"
+                            boxShadow="dark-lg"
+                            bg="white"
+                            fontSize={'13px'}
+                            fontWeight={'400'}
+                            borderRadius={'6px'}
+                            padding={'8px 8px'}
+                            color="black"
+                            border="1px solid"
+                            borderColor="#23233D"
+                            arrowShadowColor="#2B2F35"
+                            maxWidth="100rem"
+                            >
+                                <InfoIcon color="white" height="16px" width='16px' />
+                            </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">SIGNATURE(S):</Text>
                     </Box>
                     <Box
                       borderBottom="1px solid rgb(56, 56, 56)"
@@ -751,7 +1167,11 @@ const Home = () => {
                     >
                       {selectedTransactionDetails?.signature.map(
                         (signature: any, idx1: any) => (
-                          <Box display="flex" gap="0.5rem" justifyContent="space-between">
+                          <Box
+                            display="flex"
+                            gap="0.5rem"
+                            justifyContent="space-between"
+                          >
                             <Text
                               marginBottom="3px"
                               fontSize="14px"
