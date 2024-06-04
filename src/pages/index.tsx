@@ -33,7 +33,7 @@ export default function Home() {
   },[])
 
   useEffect(()=>{
-    const fetchBlockTransactions=async()=>{
+    const fetchBlockTransactions=async(blockNumber:any)=>{
       const res=await axios.get(`/api/latestBlockTransactions?blockNumber=${latestBlock}`
       )
       if(res?.data){
@@ -42,7 +42,7 @@ export default function Home() {
           blockNumber:res?.data?.transactions?.result?.block_number
         })
         setblockTimeStamp(res?.data?.transactions?.result?.timestamp)
-        // setblockTransactions(res?.data?.transactions?.result?.transactions)
+        setblockTransactions(res?.data?.transactions?.result?.transactions)
         const transactionsTobeStored=res?.data?.transactions?.result?.transactions;
         const dbstore=await axios.post(`/api/storetransactionsdb`,{transactions:transactionsTobeStored});
         return {
@@ -52,27 +52,25 @@ export default function Home() {
         };
       }
     }
-    // const fetchMultipleBlocksTransactions = async () => {
-    //   const transactionsArray:any = [];
-    //   const timestampMap:any = {};
-    //   if(latestBlock){
-    //     for (let i = 0; i <= 10; i++) {
-    //       let blockNumber:any = (latestBlock) - i;
-    //       console.log(blockNumber,"num")
-    //       const result = await fetchBlockTransactions(blockNumber);
+    const fetchMultipleBlocksTransactions = async () => {
+      const transactionsArray:any = [];
+      const timestampMap:any = {};
+      if(latestBlock){
+        for (let i = 0; i <= 10; i++) {
+          let blockNumber:any = Number(latestBlock) - i;
+          const result = await fetchBlockTransactions(blockNumber);
   
-    //       if (result) {
-    //         timestampMap[blockNumber] = result.timeStamp;
-    //         transactionsArray.push(result.transactions);
-    //       }
-    //     }
-    //     setblockTransactions(transactionsArray);
-    //   }
+          if (result) {
+            timestampMap[blockNumber] = result.timeStamp;
+            transactionsArray.push(result.transactions);
+          }
+        }
+      }
 
-    // };
+    };
     try{
       if (latestBlock) {
-        fetchBlockTransactions();
+        fetchBlockTransactions(latestBlock)
         const intervalId = setInterval(fetchBlockTransactions, 30000); // Run every 30 seconds
   
         return () => clearInterval(intervalId); // Clear interval on component unmount or latestBlock change
