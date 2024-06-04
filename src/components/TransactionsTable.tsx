@@ -390,9 +390,9 @@ const TransactionsTable = ({ transactions, blockNumber }: any) => {
                                   <Tooltip
                                     hasArrow
                                     label={"Accepted on L2"}
-                                    placement="top-end"
-                                    ml="8rem"
+                                    placement="top"
                                     rounded="md"
+                                    position="absolute"
                                     boxShadow="dark-lg"
                                     bg="white"
                                     fontSize={"13px"}
