@@ -201,7 +201,7 @@ const CallDataTable = ({ events,actionTypeSelected }: any) => {
                                 cursor="pointer"
                                 _hover={{ color: "" }}
                               >
-                                "{actionTypeSelected==1?Number(transaction): transaction}"
+                                &quot;{actionTypeSelected==1?Number(transaction): transaction}&quot;
                               </Text>
                             </Box>
                           </VStack>
