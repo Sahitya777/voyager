@@ -9,7 +9,9 @@ export default async function handler(
   res: NextApiResponse,
 ) {
     try {
-        const allContent=await prisma.transaction.findMany();
+        const allContent=await prisma.transaction.findMany({
+            take:700
+        });
         return res.status(200).json({transactions:allContent})
     } catch (error) {
         console.log(error,'err')

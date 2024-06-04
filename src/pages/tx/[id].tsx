@@ -1046,7 +1046,7 @@ const Home = () => {
                     <Box borderBottom="1px solid rgb(56, 56, 56)" width="100%">
                       <Box
                         bg="rgb(32, 46, 38)"
-                        marginTop="4"
+                        marginTop="6"
                         color="rgb(130, 244, 187)"
                         lineHeight="20px"
                         letterSpacing="-0.15px"
@@ -1058,7 +1058,7 @@ const Home = () => {
                       >
                         {transactionData?.execution_resources?.steps} STEPS
                       </Box>
-                      <Box display="flex" gap="0.4rem" mb="0.4rem">
+                      <Box display="flex" gap="0.4rem" mb="0.5rem">
                         <Box
                           bg="rgb(59, 42, 28)"
                           marginTop="4"
@@ -1147,7 +1147,7 @@ const Home = () => {
                       borderBottom="1px solid rgb(56, 56, 56)"
                       width="100%"
                     >
-                      <Tabs mt="0.5rem">
+                      <Tabs mt="0.5rem" mb="0.5rem">
                         <TabList borderRadius="md">
                           <Tab
                             paddingLeft="16px"

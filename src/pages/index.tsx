@@ -42,7 +42,7 @@ export default function Home() {
           blockNumber:res?.data?.transactions?.result?.block_number
         })
         setblockTimeStamp(res?.data?.transactions?.result?.timestamp)
-        setblockTransactions(res?.data?.transactions?.result?.transactions)
+        // setblockTransactions(res?.data?.transactions?.result?.transactions)
         const transactionsTobeStored=res?.data?.transactions?.result?.transactions;
         const dbstore=await axios.post(`/api/storetransactionsdb`,{transactions:transactionsTobeStored});
         return {
@@ -86,13 +86,11 @@ export default function Home() {
     const fetchTransactionsDb=async()=>{
       const res=await axios.get('/api/gettransactionsdb');
       if(res?.data){
-        // setblockTransactions(res?.data?.transactions)
+        setblockTransactions(res?.data?.transactions)
       }
     }
     fetchTransactionsDb()
   },[blockTimeStamp])
-
-  console.log(blockTransactions,"bl")
 
   return (
     <>
