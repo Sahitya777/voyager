@@ -340,188 +340,323 @@ const TransactionsTable = ({ transactions, blockNumber }: any) => {
 
               {transactions.length > 0 && (
                 <Tbody position="relative" overflowX="hidden">
-                  {transactions
-                    .filter(
-                      (transaction: any) =>
-                        actionSelected === "ALL" ||
-                        transaction?.type === actionSelected
-                    )
-                    .map((transaction: any, idx: any) => {
-                      return (
-                        <>
-                          <Tr
-                            style={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "1px",
-                              borderBottom: "1px solid rgb(56, 56, 56)",
-                              display: `block`,
-                            }}
-                          />
-                          <Tr
-                            key={transaction.idx}
-                            width={"100%"}
-                            position="relative"
-                            p={0}
-                            _hover={{
-                              bg: "rgb(56, 56, 56)",
-                            }}
-                          >
-                            <Td
-                              width={"12.5%"}
-                              fontSize={"14px"}
-                              fontWeight={400}
-                              padding={2}
-                              textAlign="center"
+                  {transactions.filter(
+                    (transaction: any) =>
+                      actionSelected === "ALL" ||
+                      transaction?.type === actionSelected
+                  ).length === 0 ? (
+                    <Tr mt="2rem">
+                      <Td
+                        colSpan={6}
+                        textAlign="center"
+                        fontSize="16px"
+                        fontWeight={400}
+                        paddingTop="20px"
+                        
+                      >                       
+                        No records found
+                      </Td>
+                    </Tr>
+                  ) : (
+                    transactions
+                      .filter(
+                        (transaction: any) =>
+                          actionSelected === "ALL" ||
+                          transaction?.type === actionSelected
+                      )
+                      .map((transaction: any, idx: any) => {
+                        return (
+                          <>
+                            <Tr
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "1px",
+                                borderBottom: "1px solid rgb(56, 56, 56)",
+                                display: `block`,
+                              }}
+                            />
+                            <Tr
+                              key={transaction.idx}
+                              width={"100%"}
+                              position="relative"
+                              p={0}
+                              _hover={{
+                                bg: "rgb(56, 56, 56)",
+                              }}
                             >
-                              <VStack
-                                width="100%"
-                                display="flex"
-                                alignItems="flex-start"
-                                height="2.5rem"
-                              >
-                                <HStack
-                                  height="2rem"
-                                  width="2rem"
-                                  alignItems="center"
-                                  justifyContent="center"
-                                  cursor="pointer"
-                                >
-                                  <Tooltip
-                                    hasArrow
-                                    label={"Accepted on L2"}
-                                    placement="top"
-                                    rounded="md"
-                                    position="absolute"
-                                    boxShadow="dark-lg"
-                                    bg="white"
-                                    fontSize={"13px"}
-                                    fontWeight={"400"}
-                                    borderRadius={"6px"}
-                                    padding={"8px 16px"}
-                                    color="black"
-                                    border="1px solid"
-                                    borderColor="#23233D"
-                                    arrowShadowColor="#2B2F35"
-                                    maxWidth="100rem"
-                                  >
-                                    <Box width="16px">
-                                      <AcceptedonL2 />
-                                    </Box>
-                                  </Tooltip>
-                                </HStack>
-                              </VStack>
-                            </Td>
-
-                            <Td
-                              width={"12.5%"}
-                              fontSize={"14px"}
-                              fontWeight={400}
-                              overflow={"hidden"}
-                              textAlign={"center"}
-                            >
-                              <Box
-                                width="100%"
-                                pl="20%"
-                                height="100%"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                fontWeight="400"
+                              <Td
+                                width={"12.5%"}
+                                fontSize={"14px"}
+                                fontWeight={400}
+                                padding={2}
                                 textAlign="center"
                               >
                                 <VStack
                                   width="100%"
                                   display="flex"
-                                  justifyContent="center"
                                   alignItems="flex-start"
                                   height="2.5rem"
                                 >
-                                  <Box display="flex" gap="0.5rem">
+                                  <HStack
+                                    height="2rem"
+                                    width="2rem"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    cursor="pointer"
+                                  >
                                     <Tooltip
                                       hasArrow
-                                      label={transaction?.transaction_hash}
+                                      label={"Accepted on L2"}
                                       placement="top"
-                                      // ml="8rem"
                                       rounded="md"
+                                      position="absolute"
                                       boxShadow="dark-lg"
                                       bg="white"
                                       fontSize={"13px"}
                                       fontWeight={"400"}
                                       borderRadius={"6px"}
-                                      padding={"2px 8px"}
+                                      padding={"8px 16px"}
                                       color="black"
                                       border="1px solid"
                                       borderColor="#23233D"
                                       arrowShadowColor="#2B2F35"
                                       maxWidth="100rem"
                                     >
-                                      <Text
-                                        fontSize="14px"
-                                        fontWeight="400"
-                                        color="#8BA3DF"
-                                        cursor="pointer"
-                                        _hover={{ color: "" }}
-                                        onClick={() => {
-                                          setcurrentSelectedtxIndex(idx);
-                                          setselectedTransactionDetails(
-                                            transaction
-                                          );
-                                          if (transaction?.type === "INVOKE") {
-                                            router.push(
-                                              `/tx/${transaction?.transaction_hash}`
-                                            );
-                                          }
-                                        }}
-                                      >
-                                        {transaction?.transaction_hash.substring(
-                                          0,
-                                          6
-                                        )}
-                                        ...
-                                        {transaction?.transaction_hash.substring(
-                                          transaction?.transaction_hash.length -
-                                            5,
-                                          transaction?.transaction_hash.length
-                                        )}
-                                      </Text>
+                                      <Box width="16px">
+                                        <AcceptedonL2 />
+                                      </Box>
                                     </Tooltip>
-                                    <Box
-                                      display="flex"
-                                      gap="0.5rem"
-                                      cursor="pointer"
-                                      onClick={() => {
-                                        setcurrentCopiedIdnex(idx);
-                                        navigator.clipboard.writeText(
-                                          transaction?.transaction_hash
-                                        );
-                                      }}
-                                      onMouseEnter={() => {
-                                        sethoverCopy(1);
-                                        // setcurrentHoverIndex(idx);
-                                      }}
-                                      onMouseLeave={() => {
-                                        sethoverCopy(0);
-                                        // setcurrentHoverIndex(-1);
-                                      }}
-                                    >
-                                      <Copy
-                                        height="14px"
-                                        width="14px"
-                                        color={
-                                          hoverCopy == 1 &&
-                                          idx === currentHoverIndex
-                                            ? "#999898"
-                                            : "#7E7E7E"
-                                        }
-                                        style={{ marginTop: "3" }}
+                                  </HStack>
+                                </VStack>
+                              </Td>
+
+                              <Td
+                                width={"12.5%"}
+                                fontSize={"14px"}
+                                fontWeight={400}
+                                overflow={"hidden"}
+                                textAlign={"center"}
+                              >
+                                <Box
+                                  width="100%"
+                                  pl="20%"
+                                  height="100%"
+                                  display="flex"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                  fontWeight="400"
+                                  textAlign="center"
+                                >
+                                  <VStack
+                                    width="100%"
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="flex-start"
+                                    height="2.5rem"
+                                  >
+                                    <Box display="flex" gap="0.5rem">
+                                      <Tooltip
+                                        hasArrow
+                                        label={transaction?.transaction_hash}
+                                        placement="top"
+                                        // ml="8rem"
+                                        rounded="md"
+                                        boxShadow="dark-lg"
+                                        bg="white"
+                                        fontSize={"13px"}
+                                        fontWeight={"400"}
+                                        borderRadius={"6px"}
+                                        padding={"2px 8px"}
+                                        color="black"
+                                        border="1px solid"
+                                        borderColor="#23233D"
+                                        arrowShadowColor="#2B2F35"
+                                        maxWidth="100rem"
+                                      >
+                                        <Text
+                                          fontSize="14px"
+                                          fontWeight="400"
+                                          color="#8BA3DF"
+                                          cursor="pointer"
+                                          _hover={{ color: "" }}
+                                          onClick={() => {
+                                            setcurrentSelectedtxIndex(idx);
+                                            setselectedTransactionDetails(
+                                              transaction
+                                            );
+                                            if (
+                                              transaction?.type === "INVOKE"
+                                            ) {
+                                              router.push(
+                                                `/tx/${transaction?.transaction_hash}`
+                                              );
+                                            }
+                                          }}
+                                        >
+                                          {transaction?.transaction_hash.substring(
+                                            0,
+                                            6
+                                          )}
+                                          ...
+                                          {transaction?.transaction_hash.substring(
+                                            transaction?.transaction_hash
+                                              .length - 5,
+                                            transaction?.transaction_hash.length
+                                          )}
+                                        </Text>
+                                      </Tooltip>
+                                      <Box
+                                        display="flex"
+                                        gap="0.5rem"
+                                        cursor="pointer"
                                         onClick={() => {
-                                          handleCopy(
+                                          setcurrentCopiedIdnex(idx);
+                                          navigator.clipboard.writeText(
                                             transaction?.transaction_hash
                                           );
                                         }}
-                                      />
-                                      {copied && currentCopiedIdnex == idx && (
+                                        onMouseEnter={() => {
+                                          sethoverCopy(1);
+                                          // setcurrentHoverIndex(idx);
+                                        }}
+                                        onMouseLeave={() => {
+                                          sethoverCopy(0);
+                                          // setcurrentHoverIndex(-1);
+                                        }}
+                                      >
+                                        <Copy
+                                          height="14px"
+                                          width="14px"
+                                          color={
+                                            hoverCopy == 1 &&
+                                            idx === currentHoverIndex
+                                              ? "#999898"
+                                              : "#7E7E7E"
+                                          }
+                                          style={{ marginTop: "3" }}
+                                          onClick={() => {
+                                            handleCopy(
+                                              transaction?.transaction_hash
+                                            );
+                                          }}
+                                        />
+                                        {copied &&
+                                          currentCopiedIdnex == idx && (
+                                            <Text
+                                              bg="#1B1B1B"
+                                              fontSize="12px"
+                                              px="6px"
+                                              border="1px solid #4B4B4B"
+                                              borderRadius="6px"
+                                            >
+                                              COPIED!
+                                            </Text>
+                                          )}
+                                      </Box>
+                                    </Box>
+                                  </VStack>
+                                </Box>
+                              </Td>
+                              <Td
+                                width={"12.5%"}
+                                maxWidth={"5rem"}
+                                fontSize={"14px"}
+                                fontWeight={400}
+                                textAlign={"center"}
+                              >
+                                <VStack
+                                  width="100%"
+                                  display="flex"
+                                  alignItems="center"
+                                  height="2.5rem"
+                                >
+                                  <HStack
+                                    height="2rem"
+                                    // width="2rem"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                  >
+                                    <Box
+                                      display="flex"
+                                      border="1px"
+                                      borderColor="#2B2F35"
+                                      justifyContent="space-between"
+                                      ml="2rem"
+                                      pt="7"
+                                      pl="3"
+                                      pr="3"
+                                      width="7rem"
+                                      borderRadius="md"
+                                      cursor="pointer"
+                                    >
+                                      <Box
+                                        bg={bgColorType[transaction?.type]}
+                                        color={ColorType[transaction?.type]}
+                                        lineHeight="20px"
+                                        letterSpacing="-0.15px"
+                                        padding="1px 8px"
+                                        fontSize="12px"
+                                        borderRadius="4px"
+                                        border={
+                                          BorderColorType[transaction?.type]
+                                        }
+                                      >
+                                        {transaction?.type}
+                                      </Box>
+                                    </Box>
+                                  </HStack>
+                                </VStack>
+                              </Td>
+                              <Td
+                                width={"12.5%"}
+                                maxWidth={"3rem"}
+                                fontSize={"14px"}
+                                fontWeight={400}
+                                overflow={"hidden"}
+                                textAlign={"center"}
+                              >
+                                <Box
+                                  display="flex"
+                                  gap="0.5rem"
+                                  justifyContent="center"
+                                  cursor="pointer"
+                                >
+                                  <Text
+                                    fontSize="14px"
+                                    fontWeight="400"
+                                    color="#8BA3DF"
+                                    cursor="pointer"
+                                    onClick={() => {
+                                      router.push(
+                                        `https://voyager.online/block/${blockNumber}`
+                                      );
+                                    }}
+                                  >
+                                    {blockNumber}
+                                  </Text>
+                                  <Box
+                                    display="flex"
+                                    onClick={() => {
+                                      setcurrentCopiedBlockIndex(idx);
+                                    }}
+                                  >
+                                    <Copy
+                                      height="14px"
+                                      width="14px"
+                                      color={
+                                        hoverCopy == 2 &&
+                                        idx === currentCopiedBlockIndex
+                                          ? "#999898"
+                                          : "#7E7E7E"
+                                      }
+                                      style={{ marginTop: "3" }}
+                                      onClick={() => {
+                                        handleCopy(blockNumber);
+                                      }}
+                                    />
+                                    {copied &&
+                                      currentCopiedBlockIndex == idx && (
                                         <Text
                                           bg="#1B1B1B"
                                           fontSize="12px"
@@ -532,158 +667,46 @@ const TransactionsTable = ({ transactions, blockNumber }: any) => {
                                           COPIED!
                                         </Text>
                                       )}
-                                    </Box>
                                   </Box>
-                                </VStack>
-                              </Box>
-                            </Td>
-                            <Td
-                              width={"12.5%"}
-                              maxWidth={"5rem"}
-                              fontSize={"14px"}
-                              fontWeight={400}
-                              textAlign={"center"}
-                            >
-                              <VStack
-                                width="100%"
-                                display="flex"
-                                alignItems="center"
-                                height="2.5rem"
+                                </Box>
+                              </Td>
+                              <Td
+                                width={"12.5%"}
+                                maxWidth={"5rem"}
+                                fontSize={"14px"}
+                                fontWeight={400}
+                                textAlign={"center"}
+                                p="0"
                               >
-                                <HStack
-                                  height="2rem"
-                                  // width="2rem"
+                                <Box
+                                  width="100%"
+                                  height="100%"
+                                  display="flex"
                                   alignItems="center"
                                   justifyContent="center"
-                                >
-                                  <Box
-                                    display="flex"
-                                    border="1px"
-                                    borderColor="#2B2F35"
-                                    justifyContent="space-between"
-                                    ml="2rem"
-                                    pt="7"
-                                    pl="3"
-                                    pr="3"
-                                    width="7rem"
-                                    borderRadius="md"
-                                    cursor="pointer"
-                                  >
-                                    <Box
-                                      bg={bgColorType[transaction?.type]}
-                                      color={ColorType[transaction?.type]}
-                                      lineHeight="20px"
-                                      letterSpacing="-0.15px"
-                                      padding="1px 8px"
-                                      fontSize="12px"
-                                      borderRadius="4px"
-                                      border={
-                                        BorderColorType[transaction?.type]
-                                      }
-                                    >
-                                      {transaction?.type}
-                                    </Box>
-                                  </Box>
-                                </HStack>
-                              </VStack>
-                            </Td>
-                            <Td
-                              width={"12.5%"}
-                              maxWidth={"3rem"}
-                              fontSize={"14px"}
-                              fontWeight={400}
-                              overflow={"hidden"}
-                              textAlign={"center"}
-                            >
-                              <Box
-                                display="flex"
-                                gap="0.5rem"
-                                justifyContent="center"
-                                cursor="pointer"
-                              >
-                                <Text
-                                  fontSize="14px"
                                   fontWeight="400"
-                                  color="#8BA3DF"
-                                  cursor="pointer"
-                                  onClick={() => {
-                                    router.push(
-                                      `https://voyager.online/block/${blockNumber}`
-                                    );
-                                  }}
                                 >
-                                  {blockNumber}
-                                </Text>
-                                <Box
-                                  display="flex"
-                                  onClick={() => {
-                                    setcurrentCopiedBlockIndex(idx);
-                                  }}
-                                >
-                                  <Copy
-                                    height="14px"
-                                    width="14px"
-                                    color={
-                                      hoverCopy == 2 &&
-                                      idx === currentCopiedBlockIndex
-                                        ? "#999898"
-                                        : "#7E7E7E"
-                                    }
-                                    style={{ marginTop: "3" }}
-                                    onClick={() => {
-                                      handleCopy(blockNumber);
-                                    }}
-                                  />
-                                  {copied && currentCopiedBlockIndex == idx && (
-                                    <Text
-                                      bg="#1B1B1B"
-                                      fontSize="12px"
-                                      px="6px"
-                                      border="1px solid #4B4B4B"
-                                      borderRadius="6px"
-                                    >
-                                      COPIED!
-                                    </Text>
-                                  )}
+                                  <Box>
+                                    {timeElapsed(timestampBlockwise?.timeStamp)}
+                                    {/* <TransactionCancelModal/> */}
+                                  </Box>
                                 </Box>
-                              </Box>
-                            </Td>
-                            <Td
-                              width={"12.5%"}
-                              maxWidth={"5rem"}
-                              fontSize={"14px"}
-                              fontWeight={400}
-                              textAlign={"center"}
-                              p="0"
-                            >
-                              <Box
-                                width="100%"
-                                height="100%"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                fontWeight="400"
-                              >
-                                <Box>
-                                  {timeElapsed(timestampBlockwise?.timeStamp)}
-                                  {/* <TransactionCancelModal/> */}
-                                </Box>
-                              </Box>
-                            </Td>
-                          </Tr>
+                              </Td>
+                            </Tr>
 
-                          <Tr
-                            style={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "1px",
-                              borderBottom: "1px solid #2b2f35",
-                              display: `block`,
-                            }}
-                          />
-                        </>
-                      );
-                    })}
+                            <Tr
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "1px",
+                                borderBottom: "1px solid #2b2f35",
+                                display: `block`,
+                              }}
+                            />
+                          </>
+                        );
+                      })
+                  )}
                 </Tbody>
               )}
             </Table>

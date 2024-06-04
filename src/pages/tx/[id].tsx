@@ -1,3 +1,4 @@
+import CallDataTable from "@/components/CallDataTable";
 import EventsTable from "@/components/EventsTable";
 import { useDrawContext } from "@/context/DrawerContext";
 import { formatTimestamp, timeElapsed } from "@/lib/utils";
@@ -29,7 +30,9 @@ const Home = () => {
   } = useDrawContext();
   const [actionSelected, setactionSelected] = useState("overview");
   const [ethPrice, setethPrice] = useState<Number>();
-
+  const [callActionSelected, setcallActionSelected] = useState(0)
+  const [dataactionSelected, setdataactionSelected] = useState(0)
+  const [parsingtypeSelected, setparsingtypeSelected] = useState(0)
   const bgColorType: any = {
     DEPLOY: "rgb(34, 54, 85)",
     DEPLOY_ACCOUNT: "rgb(34, 54, 85)",
@@ -528,7 +531,6 @@ const Home = () => {
                           height="24px"
                           color="white"
                           border="1px solid #4B4B4B"
-                          position="absolute"
                           borderRadius="6px"
                         >
                           COPIED!
@@ -1167,6 +1169,7 @@ const Home = () => {
                               bg: "rgb(56, 56, 56)",
                             }}
                             onClick={() => {
+                              setcallActionSelected(0)
                               //   setactionSelected("ALL");
                             }}
                             //   isDisabled={unstakeTransactionStarted == true}
@@ -1195,6 +1198,7 @@ const Home = () => {
                               bg: "rgb(56, 56, 56)",
                             }}
                             onClick={() => {
+                              setcallActionSelected(1)
                               //   setactionSelected("L1_HANDLER");
                             }}
                             //   isDisabled={transactionStarted == true}
@@ -1207,6 +1211,243 @@ const Home = () => {
                           </Tab>
                         </TabList>
                       </Tabs>
+                      <Box bg="#252525" padding="16px">
+                        <Box display="flex" gap="0.4rem" color="white">
+                          <Text color="rgb(191, 67, 202)" fontSize="14px">
+                            {callActionSelected==0? 'transfer':"_ _execute_ _"}
+                          </Text>
+                          <Copy
+                            height="14px"
+                            width="14px"
+                            color="#999898"
+                            style={{ marginTop: "3" }}
+                            cursor="pointer"
+                            onClick={() => {
+                              setselectedCopyItem(7);
+                              if(callActionSelected==0){
+                                handleCopy("transfer");
+                              }else{
+                                handleCopy("_ _execute_ _")
+                              }
+                            }}
+                          />
+                          (
+                          <Text color="rgb(185, 28, 28)" fontSize="14px">
+                            {callActionSelected==0?'recipent, amount':'calls'}
+                          </Text>
+                          )
+                          <Text color="rgb(77, 77, 213)" fontSize="14px">
+                            -{">"}
+                          </Text>
+                          <Text color="white" fontSize="14px">
+                            {callActionSelected==0? '0x83af...d12e':'0x15d4...e5ad'}
+                          </Text>
+                          <Copy
+                            height="14px"
+                            width="14px"
+                            color="#999898"
+                            style={{ marginTop: "4" }}
+                            cursor="pointer"
+                            onClick={() => {
+                              setselectedCopyItem(8);
+                              if(callActionSelected==0){
+                                handleCopy(
+                                  "0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e"
+                                );
+                              }else{
+                                handleCopy("0x15d40a3d6ca2ac30f4031e42be28da9b056fef9bb7357ac5e85627ee876e5ad")
+                              }
+                            }}
+                          />
+                        </Box>
+                        <Box display="flex" gap="0.3rem" mt="1rem">
+                          <Text color="white" fontSize="14px">
+                            Address:
+                          </Text>
+                          <Text color="rgb(139, 163, 223)" fontSize="14px">
+                            StarGate: {callActionSelected==0? 'ETH Token':'Argent'}
+                          </Text>
+                          <Copy
+                            height="14px"
+                            width="14px"
+                            color="#999898"
+                            style={{ marginTop: "4" }}
+                            cursor="pointer"
+                            onClick={() => {
+                              setselectedCopyItem(9);
+                              if(callActionSelected==0){
+                                handleCopy(
+                                  "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+                                );
+                              }else{
+                                handleCopy('0x0012d0098294f5bef42722f81be98fb700d8331e75d5a590d2c09398a7465b59')
+                              }
+                            }}
+                          />
+                        </Box>
+                        <Box
+                          display="flex"
+                          mt="0.5rem"
+                          mb="0.5rem"
+                          gap="1.5rem"
+                        >
+                          <Tabs>
+                            <TabList borderRadius="md">
+                              <Tab
+                                paddingLeft="16px"
+                                paddingRight="16px"
+                                height="32px"
+                                fontSize="14px"
+                                color="#fff"
+                                border="1px solid rgb(75, 75, 75)"
+                                borderLeftRadius="4px"
+                                fontWeight="normal"
+                                _selected={{
+                                  color: "white",
+                                  bg: "rgb(75, 75, 75)",
+                                  border: "none",
+                                }}
+                                _hover={{
+                                  bg: "rgb(56, 56, 56)",
+                                }}
+                                onClick={() => {
+                                  setparsingtypeSelected(0);
+                                  //   setactionSelected("ALL");
+                                }}
+                                //   isDisabled={unstakeTransactionStarted == true}
+                                //   onClick={() => {
+                                //     setSelectedTab('stake')
+                                //     resetStates()
+                                //   }}
+                              >
+                                Hex
+                              </Tab>
+
+                              <Tab
+                                paddingLeft="16px"
+                                paddingRight="16px"
+                                height="32px"
+                                fontSize="14px"
+                                color="#fff"
+                                border="1px solid rgb(75, 75, 75)"
+                                fontWeight="normal"
+                                _selected={{
+                                  color: "white",
+                                  bg: "rgb(75, 75, 75)",
+                                  border: "none",
+                                }}
+                                _hover={{
+                                  bg: "rgb(56, 56, 56)",
+                                }}
+                                onClick={() => {
+                                  setparsingtypeSelected(1);
+                                  //   setactionSelected("L1_HANDLER");
+                                }}
+                                //   isDisabled={transactionStarted == true}
+                                //   onClick={() => {
+                                //     setSelectedTab('unstake')
+                                //     resetStates()
+                                //   }}
+                              >
+                                Dec
+                              </Tab>
+                              <Tab
+                                paddingLeft="16px"
+                                paddingRight="16px"
+                                height="32px"
+                                fontSize="14px"
+                                color="#fff"
+                                border="1px solid rgb(75, 75, 75)"
+                                borderRightRadius="4px"
+                                fontWeight="normal"
+                                _selected={{
+                                  color: "white",
+                                  bg: "rgb(75, 75, 75)",
+                                  border: "none",
+                                }}
+                                _hover={{
+                                  bg: "rgb(56, 56, 56)",
+                                }}
+                                onClick={() => {
+                                  setparsingtypeSelected(2);
+                                  //   setactionSelected("L1_HANDLER");
+                                }}
+                                //   isDisabled={transactionStarted == true}
+                                //   onClick={() => {
+                                //     setSelectedTab('unstake')
+                                //     resetStates()
+                                //   }}
+                              >
+                                Text
+                              </Tab>
+                            </TabList>
+                          </Tabs>
+                          <Tabs>
+                            <TabList borderRadius="md">
+                              <Tab
+                                paddingLeft="16px"
+                                paddingRight="16px"
+                                height="32px"
+                                fontSize="14px"
+                                color="#fff"
+                                border="1px solid rgb(75, 75, 75)"
+                                borderLeftRadius="4px"
+                                fontWeight="normal"
+                                _selected={{
+                                  color: "white",
+                                  bg: "rgb(75, 75, 75)",
+                                  border: "none",
+                                }}
+                                _hover={{
+                                  bg: "rgb(56, 56, 56)",
+                                }}
+                                onClick={() => {
+                                  setdataactionSelected(0)
+                                  //   setactionSelected("ALL");
+                                }}
+                                //   isDisabled={unstakeTransactionStarted == true}
+                                //   onClick={() => {
+                                //     setSelectedTab('stake')
+                                //     resetStates()
+                                //   }}
+                              >
+                                Decoded
+                              </Tab>
+
+                              <Tab
+                                paddingLeft="16px"
+                                paddingRight="16px"
+                                height="32px"
+                                fontSize="14px"
+                                color="#fff"
+                                border="1px solid rgb(75, 75, 75)"
+                                fontWeight="normal"
+                                borderRightRadius="4px"
+                                _selected={{
+                                  color: "white",
+                                  bg: "rgb(75, 75, 75)",
+                                  border: "none",
+                                }}
+                                _hover={{
+                                  bg: "rgb(56, 56, 56)",
+                                }}
+                                onClick={() => {
+                                  setdataactionSelected(1);
+                                  //   setactionSelected("L1_HANDLER");
+                                }}
+                                //   isDisabled={transactionStarted == true}
+                                //   onClick={() => {
+                                //     setSelectedTab('unstake')
+                                //     resetStates()
+                                //   }}
+                              >
+                                Raw
+                              </Tab>
+                            </TabList>
+                          </Tabs>
+                        </Box>
+                        {(dataactionSelected===1 &&callActionSelected===1) && <CallDataTable events={selectedTransactionDetails?.calldata} actionTypeSelected={parsingtypeSelected}/>}
+                      </Box>
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
@@ -1246,7 +1487,7 @@ const Home = () => {
                       {selectedTransactionDetails?.signature.map(
                         (signature: any, idx1: any) => (
                           <Box
-                          key={idx1}
+                            key={idx1}
                             display="flex"
                             gap="0.5rem"
                             justifyContent="space-between"
