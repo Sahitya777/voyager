@@ -12,3 +12,15 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Transaction{
+  id String @id @default(cuid())
+  calldata String[]
+  max_fee String?
+  nonce String?
+  sender_address String?
+  signature String[]
+  transaction_hash String? @unique
+  type String?
+  version String?
+}

@@ -9,7 +9,7 @@ export default async function handler(
 ) {
     const {txhash}=req.query;
   const response=await axios.post(
-    "https://free-rpc.nethermind.io/mainnet-juno",
+    "https://starknet-mainnet.blastapi.io/9705fb49-51ea-448c-b75b-4ab6a3f7e8ed",
     {
       jsonrpc: "2.0",
       method: "starknet_getTransactionReceipt",

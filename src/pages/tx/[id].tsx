@@ -1,7 +1,15 @@
 import EventsTable from "@/components/EventsTable";
 import { useDrawContext } from "@/context/DrawerContext";
 import { formatTimestamp, timeElapsed } from "@/lib/utils";
-import { Box, Spinner, Tab, TabList, Tabs, Text,Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  Spinner,
+  Tab,
+  TabList,
+  Tabs,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { Check, Copy, InfoIcon, Loader, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/router";
@@ -11,6 +19,8 @@ const Home = () => {
   const router = useRouter();
   const [transactionData, settransactionData] = useState<any>();
   const [copied, setCopied] = useState(false);
+  const [selectedCopyItem, setselectedCopyItem] = useState<Number>(-1);
+  const [selectedSign, setselectedSign] = useState<Number>(-1);
   const {
     timestampBlockwise,
     settimestampBlockwise,
@@ -56,10 +66,10 @@ const Home = () => {
       const res = await axios.get("/api/ethPrice");
       setethPrice(res?.data?.Ethprice?.ethereum?.usd);
     };
-    try{
-        fetchEthPrice();
-    }catch(err){
-        console.log(err,"err in eth price")
+    try {
+      fetchEthPrice();
+    } catch (err) {
+      console.log(err, "err in eth price");
     }
   }, []);
 
@@ -77,10 +87,8 @@ const Home = () => {
     }
   }, [router.query.id]);
 
-
-
   return (
-    <Box display="flex" mt="2.5rem" justifyContent="center">
+    <Box display="flex" mt="2.5rem" justifyContent="center" fontFamily="Inter">
       <Box
         bg="#1b1b1b"
         width="80%"
@@ -120,10 +128,11 @@ const Home = () => {
               color={"#7E7E7E"}
               //   style={{ marginTop: "8" }}
               onClick={() => {
+                setselectedCopyItem(0);
                 handleCopy(transactionData?.transaction_hash);
               }}
             />
-            {copied && (
+            {copied && selectedCopyItem == 0 && (
               <Text
                 bg="black"
                 fontSize="12px"
@@ -179,7 +188,10 @@ const Home = () => {
             </Text>
             <Box display="flex" gap="0.5rem">
               <Text color="white" fontSize="16px" lineHeight="32px">
-                {formatTimestamp(timestampBlockwise?.timeStamp).substring(0, 11)}
+                {formatTimestamp(timestampBlockwise?.timeStamp).substring(
+                  0,
+                  11
+                )}
               </Text>
               <Text color="white" fontSize="12px" lineHeight="32px">
                 {formatTimestamp(timestampBlockwise?.timeStamp).substring(
@@ -344,29 +356,31 @@ const Home = () => {
                 <Box mt="1rem">
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                            <Tooltip
-                            hasArrow
-                            label={
-                                'Unique number of the block in which the transaction is processed'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">BLOCK NUMBER:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={
+                          "Unique number of the block in which the transaction is processed"
+                        }
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        BLOCK NUMBER:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -389,29 +403,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Time at which the transaction was processed'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">TIMESTAMP:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Time at which the transaction was processed"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        TIMESTAMP:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -435,29 +449,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Actual fee paid for executing the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">ACTUAL FEE:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Actual fee paid for executing the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        ACTUAL FEE:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -497,13 +511,29 @@ const Home = () => {
                         height="16px"
                         width="16px"
                         color={"#7E7E7E"}
+                        cursor="pointer"
                         //   style={{ marginTop: "8" }}
                         onClick={() => {
+                          setselectedCopyItem(1);
                           handleCopy(
                             "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
                           );
                         }}
                       />
+                      {copied && selectedCopyItem == 1 && (
+                        <Text
+                          bg="black"
+                          fontSize="12px"
+                          px="6px"
+                          height="24px"
+                          color="white"
+                          border="1px solid #4B4B4B"
+                          position="absolute"
+                          borderRadius="6px"
+                        >
+                          COPIED!
+                        </Text>
+                      )}
                       <Text
                         marginBottom="3px"
                         fontSize="14px"
@@ -549,29 +579,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Max fee set when submitting the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">MAX FEE:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Max fee set when submitting the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        MAX FEE:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -612,12 +642,28 @@ const Home = () => {
                         width="16px"
                         color={"#7E7E7E"}
                         //   style={{ marginTop: "8" }}
+                        cursor="pointer"
                         onClick={() => {
+                          setselectedCopyItem(2);
                           handleCopy(
                             "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
                           );
                         }}
                       />
+                      {copied && selectedCopyItem == 2 && (
+                        <Text
+                          bg="black"
+                          fontSize="12px"
+                          px="6px"
+                          height="24px"
+                          color="white"
+                          border="1px solid #4B4B4B"
+                          borderRadius="6px"
+                        >
+                          COPIED!
+                        </Text>
+                      )}
+
                       <Text
                         marginBottom="3px"
                         fontSize="14px"
@@ -638,29 +684,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Gas consumed for the transaction execution'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">GAS CONSUMED:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Gas consumed for the transaction execution"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        GAS CONSUMED:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -687,29 +733,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Sending party of the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">SENDER ADDRESS:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Sending party of the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        SENDER ADDRESS:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -734,12 +780,27 @@ const Home = () => {
                         width="16px"
                         color={"#7E7E7E"}
                         //   style={{ marginTop: "8" }}
+                        cursor="pointer"
                         onClick={() => {
+                          setselectedCopyItem(6);
                           handleCopy(
                             selectedTransactionDetails?.sender_address
                           );
                         }}
                       />
+                      {copied && selectedCopyItem == 6 && (
+                        <Text
+                          bg="black"
+                          fontSize="12px"
+                          px="6px"
+                          height="24px"
+                          color="white"
+                          border="1px solid #4B4B4B"
+                          borderRadius="6px"
+                        >
+                          COPIED!
+                        </Text>
+                      )}
                     </Box>
                   </Box>
                 </Box>
@@ -751,29 +812,31 @@ const Home = () => {
                 <Box mt="1rem">
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Unix timestamp at which the transaction was processed'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">UNIX TIMESTAMP:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={
+                          "Unix timestamp at which the transaction was processed"
+                        }
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        UNIX TIMESTAMP:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -798,37 +861,52 @@ const Home = () => {
                         width="16px"
                         color={"#7E7E7E"}
                         //   style={{ marginTop: "8" }}
+                        cursor="pointer"
                         onClick={() => {
+                          setselectedCopyItem(3);
                           handleCopy(timestampBlockwise?.timeStamp);
                         }}
                       />
+                      {copied && selectedCopyItem == 3 && (
+                        <Text
+                          bg="black"
+                          fontSize="12px"
+                          px="6px"
+                          height="24px"
+                          color="white"
+                          border="1px solid #4B4B4B"
+                          borderRadius="6px"
+                        >
+                          COPIED!
+                        </Text>
+                      )}
                     </Box>
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Nonce of the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">NONCE:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Nonce of the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        NONCE:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -851,29 +929,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Index of the transaction within the block'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">POSITION:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Index of the transaction within the block"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        POSITION:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -896,29 +974,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Version of the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">VERSION:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Version of the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        VERSION:
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -941,29 +1019,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Resource utilized to execute the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">EXECUTION RESOURCES:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Resource utilized to execute the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        EXECUTION RESOURCES:
+                      </Text>
                     </Box>
                     <Box borderBottom="1px solid rgb(56, 56, 56)" width="100%">
                       <Box
@@ -1040,29 +1118,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Calldata that was sent in the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">CALLDATA:</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Calldata that was sent in the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        CALLDATA:
+                      </Text>
                     </Box>
                     <Box
                       gap="0.4rem"
@@ -1133,29 +1211,29 @@ const Home = () => {
                   </Box>
                   <Box display="flex" gap="4rem">
                     <Box display="flex" width="20%" gap="0.4rem">
-                    <Tooltip
-                            hasArrow
-                            label={
-                                'Signature(s) of the transaction'
-                            }
-                            placement="top"
-                            // ml="8rem"
-                            rounded="md"
-                            boxShadow="dark-lg"
-                            bg="white"
-                            fontSize={'13px'}
-                            fontWeight={'400'}
-                            borderRadius={'6px'}
-                            padding={'8px 8px'}
-                            color="black"
-                            border="1px solid"
-                            borderColor="#23233D"
-                            arrowShadowColor="#2B2F35"
-                            maxWidth="100rem"
-                            >
-                                <InfoIcon color="white" height="16px" width='16px' />
-                            </Tooltip>
-                      <Text color="white" fontSize="12px" fontWeight="500">SIGNATURE(S):</Text>
+                      <Tooltip
+                        hasArrow
+                        label={"Signature(s) of the transaction"}
+                        placement="top"
+                        // ml="8rem"
+                        rounded="md"
+                        boxShadow="dark-lg"
+                        bg="white"
+                        fontSize={"13px"}
+                        fontWeight={"400"}
+                        borderRadius={"6px"}
+                        padding={"8px 8px"}
+                        color="black"
+                        border="1px solid"
+                        borderColor="#23233D"
+                        arrowShadowColor="#2B2F35"
+                        maxWidth="100rem"
+                      >
+                        <InfoIcon color="white" height="16px" width="16px" />
+                      </Tooltip>
+                      <Text color="white" fontSize="12px" fontWeight="500">
+                        SIGNATURE(S):
+                      </Text>
                     </Box>
                     <Box
                       borderBottom="1px solid rgb(56, 56, 56)"
@@ -1187,10 +1265,25 @@ const Home = () => {
                               width="14px"
                               color="#999898"
                               style={{ marginTop: "3" }}
+                              cursor="pointer"
                               onClick={() => {
+                                setselectedCopyItem(4);
                                 handleCopy(signature);
                               }}
                             />
+                            {copied && selectedCopyItem == 4 && (
+                              <Text
+                                bg="black"
+                                fontSize="12px"
+                                px="6px"
+                                height="24px"
+                                color="white"
+                                border="1px solid #4B4B4B"
+                                borderRadius="6px"
+                              >
+                                COPIED!
+                              </Text>
+                            )}
                           </Box>
                         )
                       )}

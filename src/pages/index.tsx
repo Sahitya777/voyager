@@ -7,6 +7,7 @@ import axios from "axios";
 import { Box } from "@chakra-ui/react";
 import TransactionsTable from "@/components/TransactionsTable";
 import { useDrawContext } from "@/context/DrawerContext";
+import { db } from "@/db";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,14 +18,14 @@ export default function Home() {
 
   const {timestampBlockwise, settimestampBlockwise}=useDrawContext();
   useEffect(()=>{
-    const fetchdaata=async()=>{
-      const res=await axios.get('/api/latestBlock')
-      if(res?.data){
-        setlatestBlock(res?.data?.Blockdata?.result);
-      }
-    }
-
+    
     try{
+      const fetchdaata=async()=>{
+        const res=await axios.get('/api/latestBlock')
+        if(res?.data){
+          setlatestBlock(res?.data?.Blockdata?.result);
+        }
+      }
       fetchdaata();
     }catch(err){
       console.log(err,"err in fetching latest block")
@@ -42,6 +43,8 @@ export default function Home() {
         })
         setblockTimeStamp(res?.data?.transactions?.result?.timestamp)
         setblockTransactions(res?.data?.transactions?.result?.transactions)
+        const transactionsTobeStored=res?.data?.transactions?.result?.transactions;
+        const dbstore=await axios.post(`/api/storetransactionsdb`,{transactions:transactionsTobeStored});
         return {
           timeStamp: res?.data?.transactions?.result?.timestamp,
           blockNumber: res?.data?.transactions?.result?.block_number,
@@ -78,6 +81,18 @@ export default function Home() {
       console.log(err)
     }
   },[latestBlock])
+
+  useEffect(()=>{
+    const fetchTransactionsDb=async()=>{
+      const res=await axios.get('/api/gettransactionsdb');
+      if(res?.data){
+        // setblockTransactions(res?.data?.transactions)
+      }
+    }
+    fetchTransactionsDb()
+  },[blockTimeStamp])
+
+  console.log(blockTransactions,"bl")
 
   return (
     <>
