@@ -1246,6 +1246,7 @@ const Home = () => {
                       {selectedTransactionDetails?.signature.map(
                         (signature: any, idx1: any) => (
                           <Box
+                          key={idx1}
                             display="flex"
                             gap="0.5rem"
                             justifyContent="space-between"
